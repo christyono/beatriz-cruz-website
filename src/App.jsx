@@ -71,11 +71,17 @@ function App() {
           }
         })
       },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.15, rootMargin: '0px 0px -80px 0px' }
     )
 
+    // Observe sections
     sectionsRef.current.forEach((section) => {
       if (section) observer.observe(section)
+    })
+
+    // Observe reveal-text elements for staggered animations
+    document.querySelectorAll('.reveal-text').forEach((el) => {
+      observer.observe(el)
     })
 
     return () => observer.disconnect()
@@ -109,79 +115,82 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="hero" className="hero">
-        <div className="hero-image">
-          <img src={heroImg} alt="BÉACRUZ craftsmanship" />
-        </div>
-        <div className="hero-content">
-          <h1 className="hero-title">BÉACRUZ</h1>
-          <p className="hero-tagline">Made in the Philippines</p>
-        </div>
-        <button className="scroll-indicator" onClick={() => scrollToSection('collections')}>
-          <span className="scroll-line"></span>
-        </button>
-      </section>
-
-      {/* Fashion Collection */}
-      <section id="collections" className="section section-collection" ref={addToRefs}>
-        <div className="section-image-full">
-          <img src={collectionImg} alt="Fashion Collection" />
-          <div className="section-overlay">
-            <span className="section-label">Fashion Collection</span>
-            <h2 className="section-title">2018 — 2021</h2>
+      {/* Parallax Sections Wrapper */}
+      <div className="parallax-wrapper">
+        {/* Hero Section */}
+        <section id="hero" className="parallax-section hero">
+          <div className="hero-image">
+            <img src={heroImg} alt="BÉACRUZ craftsmanship" />
           </div>
-        </div>
-      </section>
+          <div className="hero-content">
+            <h1 className="hero-title">BÉACRUZ</h1>
+            <p className="hero-tagline">Made in the Philippines</p>
+          </div>
+          <button className="scroll-indicator" onClick={() => scrollToSection('collections')}>
+            <span className="scroll-line"></span>
+          </button>
+        </section>
 
-      {/* FWSD Exhibition */}
-      <section id="exhibitions" className="section section-split" ref={addToRefs}>
-        <div className="split-image">
-          <img src={exhibitionImg} alt="FWSD Exhibition" />
-        </div>
-        <div className="split-content">
-          <span className="section-label">Exhibition</span>
-          <h2 className="section-title-large">FWSD: Art and Beauty Behind Fashion</h2>
-          <p className="section-description">
-            Sotheby's New York + Art Renewal Center
-            <br />
-            <span className="year">2020 — 2021</span>
-          </p>
-        </div>
-      </section>
+        {/* Fashion Collection */}
+        <section id="collections" className="parallax-section section-fullbleed" ref={addToRefs}>
+          <div className="section-fullbleed-bg">
+            <img src={collectionImg} alt="Fashion Collection" />
+          </div>
+          <div className="section-fullbleed-content">
+            <span className="reveal-text section-label light" data-delay="1">Fashion Collection</span>
+            <h2 className="reveal-text section-title light" data-delay="2">2018 — 2021</h2>
+          </div>
+        </section>
 
-      {/* Client Projects */}
-      <section id="projects" className="section section-projects" ref={addToRefs}>
-        <div className="projects-content">
-          <span className="hashtag">#wearBCPH</span>
-          <h2 className="section-title-large">Client & Special Projects</h2>
-        </div>
-        <div className="projects-image">
-          <img src={clientImg} alt="Client Projects" />
-        </div>
-      </section>
+        {/* FWSD Exhibition */}
+        <section id="exhibitions" className="parallax-section section-fullbleed" ref={addToRefs}>
+          <div className="section-fullbleed-bg">
+            <img src={exhibitionImg} alt="FWSD Exhibition" />
+          </div>
+          <div className="section-fullbleed-content">
+            <span className="reveal-text section-label light" data-delay="1">Exhibition</span>
+            <h2 className="reveal-text section-title-large light" data-delay="2">FWSD: Art and Beauty Behind Fashion</h2>
+            <p className="reveal-text section-description light" data-delay="3">
+              Sotheby's New York + Art Renewal Center
+              <br />
+              <span className="year light">2020 — 2021</span>
+            </p>
+          </div>
+        </section>
 
-      {/* 3D Fashion */}
-      <section id="3d" className="section section-dark" ref={addToRefs}>
-        <div className="dark-content">
-          <span className="section-label light">Digital</span>
-          <h2 className="section-title-large light">3D Fashion & Jewelry</h2>
-        </div>
-        <div className="dark-image">
-          <img src={threeDImg} alt="3D Fashion" />
-        </div>
-      </section>
+        {/* Client Projects */}
+        <section id="projects" className="parallax-section section-fullbleed" ref={addToRefs}>
+          <div className="section-fullbleed-bg">
+            <img src={clientImg} alt="Client Projects" />
+          </div>
+          <div className="section-fullbleed-content">
+            <span className="reveal-text hashtag light" data-delay="1">#wearBCPH</span>
+            <h2 className="reveal-text section-title-large light" data-delay="2">Client & Special Projects</h2>
+          </div>
+        </section>
 
-      {/* Artworks */}
-      <section id="artworks" className="section section-artworks" ref={addToRefs}>
-        <div className="artworks-image">
-          <img src={artworkImg} alt="Artworks" />
-        </div>
-        <div className="artworks-content">
-          <span className="section-label">Creative</span>
-          <h2 className="section-title-large">Artworks & Fashion Illustrations</h2>
-        </div>
-      </section>
+        {/* 3D Fashion */}
+        <section id="3d" className="parallax-section section-fullbleed dark-overlay" ref={addToRefs}>
+          <div className="section-fullbleed-bg">
+            <img src={threeDImg} alt="3D Fashion" />
+          </div>
+          <div className="section-fullbleed-content">
+            <span className="reveal-text section-label light" data-delay="1">Digital</span>
+            <h2 className="reveal-text section-title-large light" data-delay="2">3D Fashion & Jewelry</h2>
+          </div>
+        </section>
+
+        {/* Artworks */}
+        <section id="artworks" className="parallax-section section-fullbleed" ref={addToRefs}>
+          <div className="section-fullbleed-bg">
+            <img src={artworkImg} alt="Artworks" />
+          </div>
+          <div className="section-fullbleed-content">
+            <span className="reveal-text section-label light" data-delay="1">Creative</span>
+            <h2 className="reveal-text section-title-large light" data-delay="2">Artworks & Fashion Illustrations</h2>
+          </div>
+        </section>
+      </div>
 
       {/* About */}
       <section id="about" className="section section-about" ref={addToRefs}>

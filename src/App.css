@@ -159,7 +159,165 @@
 }
 
 /* =============================================
-   SECTIONS - Base Styles
+   PARALLAX WRAPPER & SECTIONS
+   ============================================= */
+.parallax-wrapper {
+  position: relative;
+}
+
+.parallax-section {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 600px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Card stack z-index - later sections on top to reveal as you scroll */
+.parallax-section:nth-child(1) { z-index: 1; }
+.parallax-section:nth-child(2) { z-index: 2; }
+.parallax-section:nth-child(3) { z-index: 3; }
+.parallax-section:nth-child(4) { z-index: 4; }
+.parallax-section:nth-child(5) { z-index: 5; }
+.parallax-section:nth-child(6) { z-index: 6; }
+
+/* =============================================
+   FULL-BLEED SECTION STYLES
+   ============================================= */
+.section-fullbleed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-fullbleed-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.section-fullbleed-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 8s ease;
+}
+
+.section-fullbleed:hover .section-fullbleed-bg img {
+  transform: scale(1.03);
+}
+
+.section-fullbleed-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  padding: var(--space-lg);
+}
+
+/* Gradient overlay for text readability */
+.section-fullbleed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Dark variant overlay */
+.section-fullbleed.dark-overlay::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* =============================================
+   REVEAL TEXT ANIMATIONS
+   ============================================= */
+.reveal-text {
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-text.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered timing */
+.reveal-text[data-delay="1"] { transition-delay: 0.1s; }
+.reveal-text[data-delay="2"] { transition-delay: 0.25s; }
+.reveal-text[data-delay="3"] { transition-delay: 0.4s; }
+.reveal-text[data-delay="4"] { transition-delay: 0.55s; }
+
+/* =============================================
+   LIGHT TEXT VARIANTS (for dark backgrounds)
+   ============================================= */
+.section-label.light {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.section-title.light,
+.section-title-large.light {
+  color: #FFFFFF;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+.section-description.light {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.year.light {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.hashtag.light {
+  color: var(--color-accent);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* =============================================
+   IMAGE FOCUS - Object Position per Section
+   ============================================= */
+#hero .hero-image img {
+  object-position: center 35%;
+}
+
+#collections .section-fullbleed-bg img {
+  object-position: center 40%;
+}
+
+#exhibitions .section-fullbleed-bg img {
+  object-position: center 45%;
+}
+
+#projects .section-fullbleed-bg img {
+  object-position: center 50%;
+}
+
+#3d .section-fullbleed-bg img {
+  object-position: center center;
+}
+
+#artworks .section-fullbleed-bg img {
+  object-position: center 40%;
+}
+
+/* =============================================
+   SECTIONS - Base Styles (legacy support)
    ============================================= */
 .section {
   opacity: 0;
@@ -915,21 +1073,13 @@ a.press-logo {
    RESPONSIVE DESIGN
    ============================================= */
 @media (max-width: 1024px) {
-  .section-split,
-  .section-projects,
-  .section-dark,
-  .section-artworks {
-    grid-template-columns: 1fr;
+  /* Parallax sections - reduce height slightly */
+  .parallax-section {
+    min-height: 550px;
   }
 
-  .split-image,
-  .projects-image,
-  .artworks-image {
-    min-height: 50vh;
-  }
-
-  .dark-image {
-    order: -1;
+  .section-fullbleed-content {
+    max-width: 700px;
   }
 
   .about-grid {
@@ -942,19 +1092,43 @@ a.press-logo {
 }
 
 @media (max-width: 768px) {
+  /* Disable sticky parallax on mobile for performance */
+  .parallax-section {
+    position: relative !important;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* Reset z-index on mobile - all same level */
+  .parallax-section:nth-child(1),
+  .parallax-section:nth-child(2),
+  .parallax-section:nth-child(3),
+  .parallax-section:nth-child(4),
+  .parallax-section:nth-child(5),
+  .parallax-section:nth-child(6) {
+    z-index: 1;
+  }
+
+  .section-fullbleed-content {
+    padding: var(--space-md);
+    max-width: 100%;
+  }
+
+  .section-title-large {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+  }
+
+  /* Hero adjustments for mobile */
+  .hero {
+    position: relative !important;
+  }
+
   .nav-links {
     display: none;
   }
 
   .hero-title {
     letter-spacing: 0.15em;
-  }
-
-  .split-content,
-  .projects-content,
-  .dark-content,
-  .artworks-content {
-    padding: var(--space-lg) var(--space-md);
   }
 
   .about-grid {
@@ -977,8 +1151,16 @@ a.press-logo {
     --space-xl: 4rem;
   }
 
-  .section-image-full {
-    height: 70vh;
+  .parallax-section {
+    min-height: 70vh;
+  }
+
+  .section-fullbleed-content {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .section-title-large {
+    font-size: 1.6rem;
   }
 
   .press-logo {
