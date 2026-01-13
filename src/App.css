@@ -473,7 +473,7 @@
 .about-work {
   position: relative;
   overflow: hidden;
-  align-self: center;
+  align-self: end;
 }
 
 .about-work img {
