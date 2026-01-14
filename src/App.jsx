@@ -1,28 +1,28 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 // Images
-import logo from './images/bea_cruz_logo_circle.png'
-import heroImg from './images/section_1.jpg'
-import collectionImg from './images/section-2.jpg'
-import exhibitionImg from './images/section-3.jpg'
-import clientImg from './images/section-4.jpg'
-import threeDImg from './images/section-5.jpg'
-import artworkImg from './images/section-6.jpg'
-import aboutImg from './images/section-7.jpg'
-import selfPortrait from './images/self_portrait.jpg'
+import logo from './images/bea_cruz_logo_circle.webp'
+import heroImg from './images/section_1.webp'
+import collectionImg from './images/section-2.webp'
+import exhibitionImg from './images/section-3.webp'
+import clientImg from './images/section-4.webp'
+import threeDImg from './images/section-5.webp'
+import artworkImg from './images/section-6.webp'
+import aboutImg from './images/section-7.webp'
+import selfPortrait from './images/self_portrait.webp'
 
 // Press logos
-import businessmirror from './images/press/businessmirror.jpg'
-import businessworld from './images/press/businessworld.png'
-import cbs8 from './images/press/cbs8.png'
-import citizenink from './images/press/citizenink.png'
-import diarist from './images/press/diarist.png'
-import grazia from './images/press/grazia.jpg'
-import manilatimes from './images/press/manilatimes.png'
-import negros from './images/press/negros.jpg'
-import sothebys from './images/press/sothebys.png'
-import sunstar from './images/press/sunstar.png'
+import businessmirror from './images/press/businessmirror.webp'
+import businessworld from './images/press/businessworld.webp'
+import cbs8 from './images/press/cbs8.webp'
+import citizenink from './images/press/citizenink.webp'
+import diarist from './images/press/diarist.webp'
+import grazia from './images/press/grazia.webp'
+import manilatimes from './images/press/manilatimes.webp'
+import negros from './images/press/negros.webp'
+import sothebys from './images/press/sothebys.webp'
+import sunstar from './images/press/sunstar.webp'
 
 // Featured press (premium placement)
 const featuredPress = [
@@ -61,6 +61,19 @@ const pressLogos = [
 
 function App() {
   const sectionsRef = useRef([])
+  const marqueeRef = useRef(null)
+  const [isMarqueeVisible, setIsMarqueeVisible] = useState(false)
+
+  // Preload hero image for faster LCP
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.rel = 'preload'
+    link.as = 'image'
+    link.href = heroImg
+    link.type = 'image/webp'
+    document.head.appendChild(link)
+    return () => document.head.removeChild(link)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -87,6 +100,24 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  // IntersectionObserver for marquee animation - pause when off-screen
+  useEffect(() => {
+    const marqueeObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsMarqueeVisible(entry.isIntersecting)
+        })
+      },
+      { threshold: 0 }
+    )
+
+    if (marqueeRef.current) {
+      marqueeObserver.observe(marqueeRef.current)
+    }
+
+    return () => marqueeObserver.disconnect()
+  }, [])
+
   const addToRefs = (el) => {
     if (el && !sectionsRef.current.includes(el)) {
       sectionsRef.current.push(el)
@@ -103,7 +134,7 @@ function App() {
       <nav className="nav">
         <div className="nav-inner">
           <button className="nav-logo" onClick={() => scrollToSection('hero')}>
-            <img src={logo} alt="BÉACRUZ" />
+            <img src={logo} alt="BÉACRUZ" loading="eager" decoding="async" width="48" height="48" />
           </button>
           <ul className="nav-links">
             <li><button onClick={() => scrollToSection('collections')}>Collections</button></li>
@@ -120,7 +151,7 @@ function App() {
         {/* Hero Section */}
         <section id="hero" className="parallax-section hero">
           <div className="hero-image">
-            <img src={heroImg} alt="BÉACRUZ craftsmanship" />
+            <img src={heroImg} alt="BÉACRUZ craftsmanship" loading="eager" fetchPriority="high" decoding="async" />
           </div>
           <div className="hero-content">
             <h1 className="hero-title">BÉACRUZ</h1>
@@ -134,7 +165,7 @@ function App() {
         {/* Fashion Collection */}
         <section id="collections" className="parallax-section section-fullbleed" ref={addToRefs}>
           <div className="section-fullbleed-bg">
-            <img src={collectionImg} alt="Fashion Collection" />
+            <img src={collectionImg} alt="Fashion Collection" loading="lazy" decoding="async" />
           </div>
           <div className="section-fullbleed-content">
             <span className="reveal-text section-label light" data-delay="1">Fashion Collection</span>
@@ -145,7 +176,7 @@ function App() {
         {/* FWSD Exhibition */}
         <section id="exhibitions" className="parallax-section section-fullbleed" ref={addToRefs}>
           <div className="section-fullbleed-bg">
-            <img src={exhibitionImg} alt="FWSD Exhibition" />
+            <img src={exhibitionImg} alt="FWSD Exhibition" loading="lazy" decoding="async" />
           </div>
           <div className="section-fullbleed-content">
             <span className="reveal-text section-label light" data-delay="1">Exhibition</span>
@@ -161,7 +192,7 @@ function App() {
         {/* Client Projects */}
         <section id="projects" className="parallax-section section-fullbleed" ref={addToRefs}>
           <div className="section-fullbleed-bg">
-            <img src={clientImg} alt="Client Projects" />
+            <img src={clientImg} alt="Client Projects" loading="lazy" decoding="async" />
           </div>
           <div className="section-fullbleed-content">
             <span className="reveal-text hashtag light" data-delay="1">#wearBCPH</span>
@@ -172,7 +203,7 @@ function App() {
         {/* 3D Fashion */}
         <section id="3d" className="parallax-section section-fullbleed dark-overlay" ref={addToRefs}>
           <div className="section-fullbleed-bg">
-            <img src={threeDImg} alt="3D Fashion" />
+            <img src={threeDImg} alt="3D Fashion" loading="lazy" decoding="async" />
           </div>
           <div className="section-fullbleed-content">
             <span className="reveal-text section-label light" data-delay="1">Digital</span>
@@ -183,7 +214,7 @@ function App() {
         {/* Artworks */}
         <section id="artworks" className="parallax-section section-fullbleed" ref={addToRefs}>
           <div className="section-fullbleed-bg">
-            <img src={artworkImg} alt="Artworks" />
+            <img src={artworkImg} alt="Artworks" loading="lazy" decoding="async" />
           </div>
           <div className="section-fullbleed-content">
             <span className="reveal-text section-label light" data-delay="1">Creative</span>
@@ -199,7 +230,7 @@ function App() {
         </div>
         <div className="about-grid">
           <div className="about-portrait">
-            <img src={selfPortrait} alt="Beatriz Cruz" />
+            <img src={selfPortrait} alt="Beatriz Cruz" loading="lazy" decoding="async" />
           </div>
           <div className="about-bio">
             <p className="bio-lead">
@@ -216,7 +247,7 @@ function App() {
             </p>
           </div>
           <div className="about-work">
-            <img src={aboutImg} alt="Bea at work" />
+            <img src={aboutImg} alt="Bea at work" loading="lazy" decoding="async" />
           </div>
         </div>
       </section>
@@ -239,7 +270,7 @@ function App() {
               key={i}
             >
               <div className="feature-image-wrapper">
-                <img src={feature.src} alt={feature.alt} />
+                <img src={feature.src} alt={feature.alt} loading="lazy" decoding="async" />
                 <div className="feature-shine"></div>
               </div>
               <div className="feature-details">
@@ -254,10 +285,10 @@ function App() {
         </div>
 
         {/* Other Press - Marquee */}
-        <div className="press-other">
+        <div className="press-other" ref={marqueeRef}>
           <span className="press-other-label">Also featured in</span>
           <div className="press-marquee">
-            <div className="marquee-track">
+            <div className={`marquee-track ${!isMarqueeVisible ? 'paused' : ''}`}>
               {[...pressLogos, ...pressLogos].map((logo, i) =>
                 logo.url ? (
                   <a
@@ -267,11 +298,11 @@ function App() {
                     className="press-logo"
                     key={i}
                   >
-                    <img src={logo.src} alt={logo.alt} />
+                    <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
                   </a>
                 ) : (
                   <div className="press-logo" key={i}>
-                    <img src={logo.src} alt={logo.alt} />
+                    <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
                   </div>
                 )
               )}
@@ -284,7 +315,7 @@ function App() {
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-brand">
-            <img src={logo} alt="BÉACRUZ" className="footer-logo" />
+            <img src={logo} alt="BÉACRUZ" className="footer-logo" loading="lazy" decoding="async" width="40" height="40" />
             <span className="footer-name">BÉACRUZ</span>
           </div>
           <div className="footer-links">
